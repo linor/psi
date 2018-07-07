@@ -11,7 +11,7 @@
 #include <FastLED.h>
 #include "config.h"
 
-#define DEBUG
+// #define DEBUG
 #ifdef DEBUG
   #define DEBUG_OUT(msg)  Serial.println(msg)
 #else
@@ -30,6 +30,7 @@ state ledState = Primary;
 uint8_t visibleSecondaryColumns = 0;
 unsigned long nextEvent = 0;
 unsigned long swipeDelay = 0;
+unsigned long lastLedUpdate = 0;
 CRGB overlayColors[COLUMNS];
 
 void setup() {
@@ -41,6 +42,8 @@ void setup() {
   }
   FastLED.show(brightness());
 
+  nextEvent = millis() + random(PRIMARY_COLOR_DURATION_MINIMUM, PRIMARY_COLOR_DURATION_MAXIMUM);
+  
 #ifdef DEBUG
   Serial.begin(9600);
 #endif
@@ -56,6 +59,8 @@ void fill_column(uint8_t column, CRGB color) {
 }
 
 void loop() {
+  int updateLed = 0;
+  
   if (millis() >= nextEvent) {
     switch(ledState) {
       case Primary:
@@ -88,6 +93,12 @@ void loop() {
         break;
     }
 
+    updateLed = 1;
+  }
+
+  if (updateLed || ((millis() - lastLedUpdate) > 100)) {
+    lastLedUpdate = millis();
+    
     CRGB primaryColor = primary_color();
     uint8_t switchPoint = COLUMNS - visibleSecondaryColumns;
     for(int i = 0; i < COLUMNS; i++) {
@@ -103,7 +114,5 @@ void loop() {
     }
 
     FastLED.show(brightness());
-
   }
-
 }

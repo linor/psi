@@ -1,5 +1,5 @@
 // Vader Extreme configuration
-#undef VADER_EXTREME
+#define VADER_EXTREME
 
 // Led board only configuration
 #define FRONT
@@ -44,8 +44,6 @@ CRGB rearSecondaryOffColor = CRGB::Black; // Off
 // CHANGED BEYOND THESE LINES SHOULD NOT BE NECESSARY
 // 
 
-#ifdef VADER_EXTREME
-#else
   #define NUM_LEDS 31
   #define LEDS_PER_COLUMN 5
   #define COLUMNS 7
@@ -59,4 +57,4 @@ CRGB rearSecondaryOffColor = CRGB::Black; // Off
     { 23, 24, 25, 26, 27 },
     { 28, 29, 30, -1, -1 } 
   };
-#endif
+
