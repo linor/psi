@@ -25,7 +25,7 @@
 // How many columns to convert to the secondary color,
 // the remainder of the columns will be converted to 
 // the secondary off color.
-#define SECONDARY_LINES 7
+#define SECONDARY_LINES 3
 
 // Colors for the front PSI, note that the off color is only used
 // when the nr of secondary lines is less than the total number of

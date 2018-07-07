@@ -35,9 +35,6 @@ CRGB overlayColors[COLUMNS];
 void setup() {
   led_setup();
 
-  for(int i = 0; i < COLUMNS; i++) {
-    overlayColors[i] = i > COLUMNS - SECONDARY_LINES - 1 ? secondary_color() : secondary_off_color();
-  }
   CRGB startColor = primary_color();
   for(int i = 0; i < 31; i++) {
     leds[i] = startColor;
@@ -93,6 +90,10 @@ void loop() {
 
     CRGB primaryColor = primary_color();
     uint8_t switchPoint = COLUMNS - visibleSecondaryColumns;
+    for(int i = 0; i < COLUMNS; i++) {
+      overlayColors[i] = i > COLUMNS - SECONDARY_LINES - 1 ? secondary_color() : secondary_off_color();
+    }
+
     for(int i = 0; i < COLUMNS; i++) {
       CRGB columnColor = primaryColor;
       if (i >= switchPoint) {
