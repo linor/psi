@@ -11,7 +11,7 @@
 #include <FastLED.h>
 #include "config.h"
 
-// #define DEBUG
+//#define DEBUG
 #ifdef DEBUG
   #define DEBUG_OUT(msg)  Serial.println(msg)
 #else
@@ -63,10 +63,33 @@ void loop() {
   
   if (millis() >= nextEvent) {
     switch(ledState) {
-      case Primary:
+      case Primary: {
         ledState = PrimaryToSecondary;
         swipeDelay = random(SWIPE_DELAY_MINIMUM, SWIPE_DELAY_MAXIMUM);
         DEBUG_OUT("Switching to secondary color");
+
+        
+        int totalChance = CHANCE_SECONDARY_FULL + CHANCE_SECONDARY_PARTIAL + CHANCE_SECONDARY_PARTIAL_OFF;
+        int selection = random(totalChance);
+        if (selection < CHANCE_SECONDARY_FULL) {
+          DEBUG_OUT("Selected full color");
+          for(int i = 0; i < COLUMNS; i++) {
+            overlayColors[i] = secondary_color();
+          }
+        } else if (selection < CHANCE_SECONDARY_FULL + CHANCE_SECONDARY_PARTIAL) {
+          DEBUG_OUT("Selected partial secondary, with rest primary");
+          for(int i = 0; i < COLUMNS; i++) {
+            overlayColors[i] = i > COLUMNS - SECONDARY_PARTIAL_OFF_LINES - 1 ? secondary_color() : primary_color();
+          }
+        } else {
+          DEBUG_OUT("Selected partial secondary, rest off");
+          for(int i = 0; i < COLUMNS; i++) {
+            overlayColors[i] = i > COLUMNS - SECONDARY_PARTIAL_OFF_LINES - 1 ? secondary_color() : secondary_off_color();
+          }
+        }
+
+        // Intentional fall through 
+      }
       case PrimaryToSecondary:
         visibleSecondaryColumns++;
         if (visibleSecondaryColumns >= COLUMNS) {
@@ -77,10 +100,12 @@ void loop() {
           nextEvent = millis() + swipeDelay;
         }
         break;
-      case Secondary:
+      case Secondary: {
         ledState = SecondaryToPrimary;
         swipeDelay = random(SWIPE_DELAY_MINIMUM, SWIPE_DELAY_MAXIMUM);
-        DEBUG_OUT("Switching to secondary color");
+        DEBUG_OUT("Switching to primary color");
+        // Intentional fall through
+      }
       case SecondaryToPrimary:
         visibleSecondaryColumns--;
         if (visibleSecondaryColumns == 0) {
@@ -101,9 +126,6 @@ void loop() {
     
     CRGB primaryColor = primary_color();
     uint8_t switchPoint = COLUMNS - visibleSecondaryColumns;
-    for(int i = 0; i < COLUMNS; i++) {
-      overlayColors[i] = i > COLUMNS - SECONDARY_LINES - 1 ? secondary_color() : secondary_off_color();
-    }
 
     for(int i = 0; i < COLUMNS; i++) {
       CRGB columnColor = primaryColor;

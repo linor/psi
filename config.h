@@ -1,5 +1,5 @@
 // Vader Extreme configuration
-#define VADER_EXTREME
+// #define VADER_EXTREME
 
 // Led board only configuration
 #define FRONT
@@ -22,10 +22,18 @@
 #define SWIPE_DELAY_MINIMUM 30
 #define SWIPE_DELAY_MAXIMUM 50
 
+// Defines the chances between the various options for
+// the secondary color. If the chance for an option is 
+// set to 0, it will not be selected.
+#define CHANCE_SECONDARY_FULL 2
+#define CHANCE_SECONDARY_PARTIAL 2
+#define CHANCE_SECONDARY_PARTIAL_OFF 2
+
 // How many columns to convert to the secondary color,
 // the remainder of the columns will be converted to 
 // the secondary off color.
-#define SECONDARY_LINES 3
+#define SECONDARY_PARTIAL_LINES 3
+#define SECONDARY_PARTIAL_OFF_LINES 3
 
 // Colors for the front PSI, note that the off color is only used
 // when the nr of secondary lines is less than the total number of
